@@ -1,9 +1,15 @@
 import { useState } from "react";
+import {
+  FIELD_HEIGHT,
+  FIELD_WIDTH,
+  FieldBoard,
+  getFieldPoint,
+  type DragState,
+} from "./components/FieldBoard";
 import { scenarios, type Player } from "./scenarios";
 
-const FIELD_WIDTH = 480;
-const FIELD_HEIGHT = 800;
-const INITIAL_DISC = { x: 54, y: 66 };
+const INITIAL_DISC = { x: 50, y: 70 };
+const DISC_SNAP_DISTANCE = 30;
 const panelClass =
   "rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.94)] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur-md max-[760px]:p-3.5";
 const panelLabelClass = "text-[11px] font-bold uppercase tracking-[0.15em] text-[#8ba899]";
@@ -15,23 +21,8 @@ const noteClass = "mt-[22px] rounded-[11px] bg-[#0d1d18] p-3.5";
 const noteLabelClass = "text-[11px] font-bold uppercase tracking-[0.09em] text-[#e5b951]";
 const noteTextClass = "mt-2 text-[13px] leading-5 text-[#9fb3a9]";
 
-type DragState = {
-  target: { type: "player"; id: string } | { type: "disc" };
-  pointerId: number;
-  offsetX: number;
-  offsetY: number;
-};
-
 function clonePlayers(players: Player[]) {
   return players.map((player) => ({ ...player }));
-}
-
-function getFieldPoint(svg: SVGSVGElement, clientX: number, clientY: number) {
-  const matrix = svg.getScreenCTM();
-  if (!matrix) return null;
-
-  const point = new DOMPoint(clientX, clientY).matrixTransform(matrix.inverse());
-  return { x: point.x, y: point.y };
 }
 
 export function App() {
@@ -80,6 +71,30 @@ export function App() {
     setPlayers((current) =>
       current.map((player) => (player.id === playerId ? { ...player, ...nextPosition } : player)),
     );
+  }
+
+  function endBoardDrag() {
+    if (drag?.target.type === "disc") {
+      const discX = (disc.x / 100) * FIELD_WIDTH;
+      const discY = (disc.y / 100) * FIELD_HEIGHT;
+      const nearestReceiver = players
+        .filter((player) => player.team === "offense")
+        .map((player) => ({
+          player,
+          distance: Math.hypot(
+            (player.x / 100) * FIELD_WIDTH - discX,
+            (player.y / 100) * FIELD_HEIGHT - discY,
+          ),
+        }))
+        .sort((a, b) => a.distance - b.distance)[0];
+
+      if (nearestReceiver && nearestReceiver.distance <= DISC_SNAP_DISTANCE) {
+        setDisc({ x: nearestReceiver.player.x, y: nearestReceiver.player.y });
+        setSelectedId(nearestReceiver.player.id);
+      }
+    }
+
+    setDrag(null);
   }
 
   return (
@@ -132,151 +147,16 @@ export function App() {
         </details>
 
         <section className="mx-auto min-w-0 w-full max-w-[680px] rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.9)] p-2.5 shadow-[0_18px_60px_rgba(0,0,0,0.2)] max-[1050px]:mx-0 max-[1050px]:max-w-none max-[760px]:order-1 max-[760px]:p-2">
-          <svg
-            className="mx-auto block h-auto w-[min(100%,640px,calc((100dvh-48px)*0.6))] touch-none select-none rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_12px_32px_rgba(0,0,0,0.28)] [-webkit-touch-callout:none] max-[760px]:w-[min(100%,calc((100dvh-105px)*0.6))]"
-            viewBox={`0 0 ${FIELD_WIDTH} ${FIELD_HEIGHT}`}
-            role="img"
-            aria-label="Interactive ultimate field. Drag players to workshop positioning."
-            onDragStart={(event) => event.preventDefault()}
-            onPointerMove={moveBoardPiece}
-            onPointerUp={() => setDrag(null)}
-            onPointerCancel={() => setDrag(null)}
-          >
-            <rect className="fill-[#276c4b]" width={FIELD_WIDTH} height={FIELD_HEIGHT} rx="12" />
-            <rect
-              className="fill-[#225f43] stroke-[rgba(255,255,255,0.56)] stroke-2"
-              x="2"
-              y="2"
-              width="476"
-              height="128"
-            />
-            <rect
-              className="fill-[#225f43] stroke-[rgba(255,255,255,0.56)] stroke-2"
-              x="2"
-              y="670"
-              width="476"
-              height="128"
-            />
-            <line
-              className="stroke-[rgba(255,255,255,0.72)] stroke-2"
-              x1="0"
-              y1="130"
-              x2="480"
-              y2="130"
-            />
-            <line
-              className="stroke-[rgba(255,255,255,0.72)] stroke-2"
-              x1="0"
-              y1="670"
-              x2="480"
-              y2="670"
-            />
-            <circle
-              className="fill-none stroke-[rgba(255,255,255,0.72)] stroke-2"
-              cx="240"
-              cy="240"
-              r="4"
-            />
-            <circle
-              className="fill-none stroke-[rgba(255,255,255,0.72)] stroke-2"
-              cx="240"
-              cy="560"
-              r="4"
-            />
-            {showDanger && (
-              <g className="fill-[rgba(240,185,63,0.16)] stroke-[rgba(245,202,91,0.55)] stroke-2 [stroke-dasharray:8_7]">
-                <path d="M240 630 C155 570 115 485 130 380 C178 405 210 430 240 470 Z" />
-                <path d="M240 630 C325 570 365 485 350 380 C302 405 270 430 240 470 Z" />
-                <ellipse cx="240" cy="230" rx="118" ry="76" />
-              </g>
-            )}
-            <path
-              className="fill-none stroke-[rgba(255,255,255,0.2)] stroke-2 [stroke-dasharray:8_9]"
-              d="M67 344 L413 344"
-            />
-            {players.map((player) => {
-              const x = (player.x / 100) * FIELD_WIDTH;
-              const y = (player.y / 100) * FIELD_HEIGHT;
-              const isSelected = player.id === selectedId;
-              return (
-                <g
-                  className="cursor-grab outline-none active:cursor-grabbing"
-                  key={player.id}
-                  transform={`translate(${x} ${y})`}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`${player.label}, ${player.role}`}
-                  onPointerDown={(event) => {
-                    event.preventDefault();
-                    const svg = event.currentTarget.ownerSVGElement;
-                    if (!svg) return;
-                    const point = getFieldPoint(svg, event.clientX, event.clientY);
-                    if (!point) return;
-                    svg.setPointerCapture(event.pointerId);
-                    setSelectedId(player.id);
-                    setDrag({
-                      target: { type: "player", id: player.id },
-                      pointerId: event.pointerId,
-                      offsetX: point.x - x,
-                      offsetY: point.y - y,
-                    });
-                  }}
-                  onFocus={() => setSelectedId(player.id)}
-                >
-                  <circle
-                    className={`${
-                      player.team === "offense"
-                        ? "fill-white stroke-zinc-300"
-                        : "fill-black stroke-zinc-700"
-                    } ${
-                      isSelected
-                        ? "stroke-5 filter-[drop-shadow(0_0_8px_rgba(255,255,255,0.65))]"
-                        : "stroke-3 filter-[drop-shadow(0_3px_3px_rgba(0,0,0,0.25))]"
-                    }`}
-                    r="18"
-                  />
-                  <text
-                    className={`pointer-events-none select-none text-xs font-extrabold ${
-                      player.team === "defense" ? "fill-white" : "fill-black"
-                    }`}
-                    textAnchor="middle"
-                    dy="5"
-                  >
-                    {player.label}
-                  </text>
-                </g>
-              );
-            })}
-            <g
-              className="cursor-grab outline-none filter-[drop-shadow(0_2px_3px_rgba(0,0,0,0.45))] active:cursor-grabbing"
-              transform={`translate(${(disc.x / 100) * FIELD_WIDTH} ${(disc.y / 100) * FIELD_HEIGHT})`}
-              role="button"
-              tabIndex={0}
-              aria-label="Disc"
-              onPointerDown={(event) => {
-                event.preventDefault();
-                const svg = event.currentTarget.ownerSVGElement;
-                if (!svg) return;
-                const point = getFieldPoint(svg, event.clientX, event.clientY);
-                if (!point) return;
-                const x = (disc.x / 100) * FIELD_WIDTH;
-                const y = (disc.y / 100) * FIELD_HEIGHT;
-                svg.setPointerCapture(event.pointerId);
-                setDrag({
-                  target: { type: "disc" },
-                  pointerId: event.pointerId,
-                  offsetX: point.x - x,
-                  offsetY: point.y - y,
-                });
-              }}
-            >
-              <ellipse className="fill-[#f8fcff] stroke-[#24546a] stroke-3" rx="11" ry="5" />
-              <path
-                className="pointer-events-none fill-none stroke-[#8ab4c7] stroke-[1.5]"
-                d="M-7 -1 Q0 3 7 -1"
-              />
-            </g>
-          </svg>
+          <FieldBoard
+            players={players}
+            disc={disc}
+            selectedId={selectedId}
+            showDanger={showDanger}
+            onSelectPlayer={setSelectedId}
+            onStartDrag={setDrag}
+            onMovePiece={moveBoardPiece}
+            onEndDrag={endBoardDrag}
+          />
         </section>
 
         <details
@@ -345,8 +225,8 @@ export function App() {
                 <div className={noteClass}>
                   <span className={noteLabelClass}>Read the field</span>
                   <p className={noteTextClass}>
-                    Compare this player&apos;s leverage against the highlighted lanes and the next
-                    defender available to help.
+                    The gold areas are strong throwing space. The darker center lane is weak space
+                    protected by the mark.
                   </p>
                 </div>
               </>

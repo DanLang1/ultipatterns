@@ -28,7 +28,7 @@ const offense: Player[] = [
 ];
 
 const personDefense: Player[] = [
-  { id: "d1", label: "D1", role: "Mark", team: "defense", x: 54, y: 73 },
+  { id: "d1", label: "D1", role: "Mark", team: "defense", x: 54, y: 66 },
   { id: "d2", label: "D2", role: "Left handler defender", team: "defense", x: 25, y: 66 },
   { id: "d3", label: "D3", role: "Right handler defender", team: "defense", x: 75, y: 66 },
   { id: "d4", label: "D4", role: "Left cutter defender", team: "defense", x: 14, y: 39 },
