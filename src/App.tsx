@@ -5,7 +5,7 @@ const FIELD_WIDTH = 480;
 const FIELD_HEIGHT = 800;
 const INITIAL_DISC = { x: 54, y: 66 };
 const panelClass =
-  "rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.9)] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.2)] max-[760px]:p-3.5";
+  "rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.94)] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.28)] backdrop-blur-md max-[760px]:p-3.5";
 const panelLabelClass = "text-[11px] font-bold uppercase tracking-[0.15em] text-[#8ba899]";
 const summaryClass =
   "flex cursor-pointer list-none items-center justify-between [&::-webkit-details-marker]:hidden";
@@ -83,46 +83,12 @@ export function App() {
   }
 
   return (
-    <main className="min-h-dvh min-w-80 bg-[radial-gradient(circle_at_50%_0%,#19382d_0,#0b1713_43%)] px-[34px] pt-7 pb-1.5 font-['DM_Sans',sans-serif] text-[#eaf2ed] antialiased max-[760px]:px-3.5 max-[760px]:py-5">
-      <header className="mx-auto mb-3.5 flex w-full max-w-[966px] items-center justify-between gap-5 max-[760px]:flex-col max-[760px]:items-start">
-        <div>
-          <p className="mb-[7px] text-[11px] font-bold uppercase tracking-[0.15em] text-[#e5b951]">
-            Ultimate tactics lab
-          </p>
-          <h1 className="font-['Manrope',sans-serif] text-[28px] leading-none font-extrabold tracking-[-0.04em]">
-            UltiPattern
-          </h1>
-        </div>
-        <div className="flex items-center gap-2.5">
-          <button
-            className="cursor-pointer rounded-full border border-[#355247] bg-[#12241e] px-[15px] py-2.5 text-[#c9d7d0] hover:border-[#668575]"
-            type="button"
-            onClick={resetScenario}
-          >
-            Reset board
-          </button>
-          <button
-            className={`flex cursor-pointer items-center gap-2 rounded-full border px-[15px] py-2.5 ${
-              showDanger
-                ? "border-[#d7ac44] bg-[#e5b951] text-[#132017]"
-                : "border-[#355247] bg-[#12241e] text-[#c9d7d0] hover:border-[#668575]"
-            }`}
-            type="button"
-            aria-pressed={showDanger}
-            onClick={() => setShowDanger((value) => !value)}
-          >
-            <span
-              className={`h-[9px] w-[9px] rounded-full ${
-                showDanger ? "bg-[#183128]" : "bg-[#5d7569]"
-              }`}
-            />
-            Dangerous spaces
-          </button>
-        </div>
-      </header>
-
-      <section className="mx-auto grid w-fit max-w-full grid-cols-[210px_minmax(440px,530px)_190px] items-start gap-[18px] max-[1050px]:w-auto max-[1050px]:grid-cols-[190px_minmax(0,1fr)] max-[760px]:grid-cols-1">
-        <details className={`${panelClass} group max-[760px]:order-2`} open>
+    <main className="relative min-h-dvh min-w-80 overflow-x-hidden bg-[radial-gradient(circle_at_50%_0%,#19382d_0,#0b1713_43%)] px-5 py-3 font-['DM_Sans',sans-serif] text-[#eaf2ed] antialiased max-[760px]:px-3.5 max-[760px]:py-3">
+      <section className="relative mx-auto min-h-[calc(100dvh-24px)] w-full max-w-[1320px] max-[1050px]:grid max-[1050px]:grid-cols-[190px_minmax(0,1fr)] max-[1050px]:items-start max-[1050px]:gap-[18px] max-[760px]:grid-cols-1">
+        <details
+          className={`${panelClass} group absolute top-3 left-0 z-10 w-[230px] max-[1050px]:static max-[1050px]:w-auto max-[760px]:order-2`}
+          open
+        >
           <summary className={summaryClass}>
             <span className={panelLabelClass}>Defensive look</span>
             <span className={chevronClass} aria-hidden="true" />
@@ -155,33 +121,19 @@ export function App() {
               <span className={noteLabelClass}>Workshop prompt</span>
               <p className={noteTextClass}>{scenario.coachingPoint}</p>
             </div>
+            <button
+              className="mt-3 w-full cursor-pointer rounded-full border border-[#355247] bg-[#12241e] px-3 py-2.5 text-sm text-[#c9d7d0] hover:border-[#668575]"
+              type="button"
+              onClick={resetScenario}
+            >
+              Reset board
+            </button>
           </div>
         </details>
 
-        <section className="min-w-0 rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.9)] px-5 py-[22px] shadow-[0_18px_60px_rgba(0,0,0,0.2)] max-[760px]:order-1 max-[760px]:p-3">
-          <div className="mb-3.5 flex items-end justify-between max-[760px]:items-start">
-            <div>
-              <p className={panelLabelClass}>Hostack sandbox</p>
-              <h2 className="mt-1 font-['Manrope',sans-serif] text-[22px] leading-[1.2] font-bold">
-                {scenario.name}
-              </h2>
-            </div>
-            <div className="flex items-center gap-2.5 text-xs text-[#829c90] max-[760px]:hidden">
-              <span className="flex items-center gap-1.5">
-                <i className="h-[9px] w-[9px] rounded-full bg-[#f2cd67]" /> Offense
-              </span>
-              <span className="flex items-center gap-1.5">
-                <i className="h-[9px] w-[9px] rounded-full bg-[#dd6e67]" /> Defense
-              </span>
-              <span className="flex items-center gap-1.5">
-                <i className="h-[9px] w-[9px] rounded-full border-2 border-[#d8efff] bg-white" />{" "}
-                Disc
-              </span>
-            </div>
-          </div>
-
+        <section className="mx-auto min-w-0 w-full max-w-[680px] rounded-2xl border border-[#264138] bg-[rgba(16,35,29,0.9)] p-2.5 shadow-[0_18px_60px_rgba(0,0,0,0.2)] max-[1050px]:mx-0 max-[1050px]:max-w-none max-[760px]:order-1 max-[760px]:p-2">
           <svg
-            className="mx-auto block h-auto w-[min(100%,490px,calc((100dvh-225px)*0.6))] touch-none select-none rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_12px_32px_rgba(0,0,0,0.28)] [-webkit-touch-callout:none] max-[760px]:w-[min(100%,calc((100dvh-210px)*0.6))]"
+            className="mx-auto block h-auto w-[min(100%,640px,calc((100dvh-48px)*0.6))] touch-none select-none rounded-xl shadow-[inset_0_0_0_1px_rgba(255,255,255,0.12),0_12px_32px_rgba(0,0,0,0.28)] [-webkit-touch-callout:none] max-[760px]:w-[min(100%,calc((100dvh-105px)*0.6))]"
             viewBox={`0 0 ${FIELD_WIDTH} ${FIELD_HEIGHT}`}
             role="img"
             aria-label="Interactive ultimate field. Drag players to workshop positioning."
@@ -278,8 +230,8 @@ export function App() {
                         : "fill-[#dd6e67] stroke-[#ffc0b8]"
                     } ${
                       isSelected
-                        ? "stroke-[5] [filter:drop-shadow(0_0_8px_rgba(255,255,255,0.65))]"
-                        : "stroke-[3] [filter:drop-shadow(0_3px_3px_rgba(0,0,0,0.25))]"
+                        ? "stroke-5 filter-[drop-shadow(0_0_8px_rgba(255,255,255,0.65))]"
+                        : "stroke-3 filter-[drop-shadow(0_3px_3px_rgba(0,0,0,0.25))]"
                     }`}
                     r="18"
                   />
@@ -296,7 +248,7 @@ export function App() {
               );
             })}
             <g
-              className="cursor-grab outline-none [filter:drop-shadow(0_2px_3px_rgba(0,0,0,0.45))] active:cursor-grabbing"
+              className="cursor-grab outline-none filter-[drop-shadow(0_2px_3px_rgba(0,0,0,0.45))] active:cursor-grabbing"
               transform={`translate(${(disc.x / 100) * FIELD_WIDTH} ${(disc.y / 100) * FIELD_HEIGHT})`}
               role="button"
               tabIndex={0}
@@ -318,27 +270,47 @@ export function App() {
                 });
               }}
             >
-              <ellipse className="fill-[#f8fcff] stroke-[#24546a] stroke-[3]" rx="11" ry="5" />
+              <ellipse className="fill-[#f8fcff] stroke-[#24546a] stroke-3" rx="11" ry="5" />
               <path
                 className="pointer-events-none fill-none stroke-[#8ab4c7] stroke-[1.5]"
                 d="M-7 -1 Q0 3 7 -1"
               />
             </g>
           </svg>
-          <p className="mt-3 text-center text-xs text-[#789286]">
-            Drag any player or the disc. Select defensive presets to compare spacing.
-          </p>
         </section>
 
         <details
-          className={`${panelClass} group min-h-[300px] max-[1050px]:col-span-full max-[1050px]:min-h-0 max-[760px]:order-3 max-[760px]:col-auto`}
+          className={`${panelClass} group absolute top-3 right-0 z-10 min-h-[300px] w-[220px] max-[1050px]:static max-[1050px]:col-span-full max-[1050px]:min-h-0 max-[1050px]:w-auto max-[760px]:order-3 max-[760px]:col-auto`}
           open
         >
           <summary className={summaryClass}>
-            <span className={panelLabelClass}>Selection</span>
+            <span className={panelLabelClass}>UltiPattern</span>
             <span className={chevronClass} aria-hidden="true" />
           </summary>
           <div className="overflow-hidden">
+            <p className="mt-4 text-[10px] font-bold uppercase tracking-[0.15em] text-[#e5b951]">
+              Hostack sandbox
+            </p>
+            <h1 className="mt-1 font-['Manrope',sans-serif] text-xl leading-[1.2] font-bold">
+              {scenario.name}
+            </h1>
+            <button
+              className={`mt-4 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full border px-3 py-2.5 text-sm ${
+                showDanger
+                  ? "border-[#d7ac44] bg-[#e5b951] text-[#132017]"
+                  : "border-[#355247] bg-[#12241e] text-[#c9d7d0] hover:border-[#668575]"
+              }`}
+              type="button"
+              aria-pressed={showDanger}
+              onClick={() => setShowDanger((value) => !value)}
+            >
+              <span
+                className={`h-2 w-2 rounded-full ${showDanger ? "bg-[#183128]" : "bg-[#5d7569]"}`}
+              />
+              Dangerous spaces
+            </button>
+            <div className="my-4 h-px bg-[#264138]" />
+            <p className={panelLabelClass}>Selection</p>
             {selectedPlayer ? (
               <>
                 <div
