@@ -226,8 +226,8 @@ export function App() {
                   <circle
                     className={`${
                       player.team === "offense"
-                        ? "fill-[#f2cd67] stroke-[#fff0b3]"
-                        : "fill-[#dd6e67] stroke-[#ffc0b8]"
+                        ? "fill-white stroke-zinc-300"
+                        : "fill-black stroke-zinc-700"
                     } ${
                       isSelected
                         ? "stroke-5 filter-[drop-shadow(0_0_8px_rgba(255,255,255,0.65))]"
@@ -237,7 +237,7 @@ export function App() {
                   />
                   <text
                     className={`pointer-events-none select-none text-xs font-extrabold ${
-                      player.team === "defense" ? "fill-[#2c1010]" : "fill-[#102018]"
+                      player.team === "defense" ? "fill-white" : "fill-black"
                     }`}
                     textAnchor="middle"
                     dy="5"
@@ -314,8 +314,10 @@ export function App() {
             {selectedPlayer ? (
               <>
                 <div
-                  className={`mt-5 grid h-[52px] w-[52px] place-items-center rounded-full font-extrabold text-[#16231d] ${
-                    selectedPlayer.team === "offense" ? "bg-[#f2cd67]" : "bg-[#dd6e67]"
+                  className={`mt-5 grid h-[52px] w-[52px] place-items-center rounded-full font-extrabold ${
+                    selectedPlayer.team === "offense"
+                      ? "bg-white text-black"
+                      : "bg-black text-white"
                   }`}
                 >
                   {selectedPlayer.label}

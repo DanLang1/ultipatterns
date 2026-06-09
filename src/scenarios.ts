@@ -28,21 +28,21 @@ const offense: Player[] = [
 ];
 
 const personDefense: Player[] = [
-  { id: "d1", label: "M1", role: "Mark", team: "defense", x: 54, y: 73 },
-  { id: "d2", label: "M2", role: "Left handler defender", team: "defense", x: 25, y: 66 },
-  { id: "d3", label: "M3", role: "Right handler defender", team: "defense", x: 75, y: 66 },
-  { id: "d4", label: "M4", role: "Left cutter defender", team: "defense", x: 14, y: 39 },
-  { id: "d5", label: "M5", role: "Inside-left defender", team: "defense", x: 38, y: 39 },
-  { id: "d6", label: "M6", role: "Inside-right defender", team: "defense", x: 62, y: 39 },
-  { id: "d7", label: "M7", role: "Right cutter defender", team: "defense", x: 86, y: 39 },
+  { id: "d1", label: "D1", role: "Mark", team: "defense", x: 54, y: 73 },
+  { id: "d2", label: "D2", role: "Left handler defender", team: "defense", x: 25, y: 66 },
+  { id: "d3", label: "D3", role: "Right handler defender", team: "defense", x: 75, y: 66 },
+  { id: "d4", label: "D4", role: "Left cutter defender", team: "defense", x: 14, y: 39 },
+  { id: "d5", label: "D5", role: "Inside-left defender", team: "defense", x: 38, y: 39 },
+  { id: "d6", label: "D6", role: "Inside-right defender", team: "defense", x: 62, y: 39 },
+  { id: "d7", label: "D7", role: "Right cutter defender", team: "defense", x: 86, y: 39 },
 ];
 
 const switchDefense: Player[] = [
   ...personDefense.slice(0, 3),
-  { id: "d4", label: "M4", role: "Front switch", team: "defense", x: 43, y: 54 },
-  { id: "d5", label: "M5", role: "Lane help", team: "defense", x: 59, y: 49 },
-  { id: "d6", label: "M6", role: "Deep switch", team: "defense", x: 42, y: 34 },
-  { id: "d7", label: "M7", role: "Last back", team: "defense", x: 54, y: 20 },
+  { id: "d4", label: "D4", role: "Front switch", team: "defense", x: 43, y: 54 },
+  { id: "d5", label: "D5", role: "Lane help", team: "defense", x: 59, y: 49 },
+  { id: "d6", label: "D6", role: "Deep switch", team: "defense", x: 42, y: 34 },
+  { id: "d7", label: "D7", role: "Last back", team: "defense", x: 54, y: 20 },
 ];
 
 const bracketDefense: Player[] = [
