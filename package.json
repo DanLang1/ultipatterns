@@ -1,0 +1,34 @@
+{
+  "name": "ultipattern",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "check": "npm run typecheck && npm run lint && npm run format:check",
+    "typecheck": "tsc -b",
+    "lint": "oxlint .",
+    "format": "oxfmt --write .",
+    "format:check": "oxfmt --check ."
+  },
+  "dependencies": {
+    "@tanstack/react-router": "1.170.15",
+    "react": "19.2.7",
+    "react-dom": "19.2.7"
+  },
+  "devDependencies": {
+    "@rolldown/plugin-babel": "0.2.3",
+    "@tailwindcss/postcss": "4.1.17",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "6.0.2",
+    "babel-plugin-react-compiler": "1.0.0",
+    "oxfmt": "0.54.0",
+    "oxlint": "1.69.0",
+    "postcss": "8.5.6",
+    "tailwindcss": "4.1.17",
+    "typescript": "6.0.3",
+    "vite": "8.0.16"
+  }
+}

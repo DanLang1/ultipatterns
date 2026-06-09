@@ -1,0 +1,11 @@
+{
+  "plugins": ["react", "react-perf"],
+  "rules": {
+    "react/rules-of-hooks": "error",
+    "react/exhaustive-deps": "error",
+    "react/jsx-key": "error",
+    "react/no-array-index-key": "warn",
+    "react-perf/jsx-no-new-object-as-prop": "warn"
+  },
+  "ignorePatterns": ["dist", "node_modules"]
+}
